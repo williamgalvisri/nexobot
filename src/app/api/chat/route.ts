@@ -5,10 +5,10 @@ import { z } from "zod";
 
 const chatSchema = z.object({
   businessId: z.string(),
-  conversationId: z.string().optional(),
+  conversationId: z.string().nullish(),
   message: z.string().min(1).max(2000),
-  customerName: z.string().optional(),
-  customerEmail: z.string().email().optional(),
+  customerName: z.string().nullish(),
+  customerEmail: z.string().email().nullish(),
 });
 
 export async function POST(req: NextRequest) {
