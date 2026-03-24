@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
     // Get or create conversation
     let conversation;
     if (data.conversationId) {
-      conversation = await prisma.conversation.findUnique({
-        where: { id: data.conversationId },
+      conversation = await prisma.conversation.findFirst({
+        where: { id: data.conversationId, businessId: business.id },
         include: { messages: { orderBy: { createdAt: "asc" }, take: 20 } },
       });
     }
