@@ -8,31 +8,21 @@
   }
 
   body {
-    @apply bg-gray-950 text-white antialiased;
+    @apply bg-white text-neutral-900 antialiased;
   }
 }
 
 @layer components {
-  .gradient-text {
-    @apply bg-gradient-to-r from-brand-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
+  .section-dark {
+    @apply bg-neutral-950 text-white;
   }
 
-  .gradient-border {
-    @apply relative rounded-xl;
-    background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
-    padding: 1px;
+  .section-light {
+    @apply bg-white text-neutral-900;
   }
 
-  .gradient-border > * {
-    @apply rounded-xl bg-gray-900;
-  }
-
-  .glow {
-    box-shadow: 0 0 60px -12px rgba(99, 102, 241, 0.4);
-  }
-
-  .glow-sm {
-    box-shadow: 0 0 30px -8px rgba(99, 102, 241, 0.3);
+  .section-muted {
+    @apply bg-neutral-50 text-neutral-900;
   }
 }
 
@@ -57,9 +47,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-gray-700;
+  @apply rounded-full bg-neutral-300;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-600;
+  @apply bg-neutral-400;
 }
