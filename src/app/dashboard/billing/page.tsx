@@ -29,10 +29,9 @@ const plans = [
     conversations: "500",
     features: [
       "500 conversaciones/mes",
-      "Widget personalizable",
-      "Captura de leads",
+      "Widget para tu sitio web",
+      "Captura automática de leads",
       "Dashboard de analytics",
-      "Soporte por email",
     ],
   },
   {
@@ -45,11 +44,9 @@ const plans = [
     features: [
       "2,000 conversaciones/mes",
       "WhatsApp Business",
-      "Multi-idioma",
-      "Integración CRM",
-      "Captura avanzada de leads",
-      "Soporte prioritario",
-      "API access",
+      "Widget personalizable",
+      "Captura automática de leads",
+      "Dashboard de analytics",
     ],
   },
   {
@@ -61,11 +58,8 @@ const plans = [
     features: [
       "Conversaciones ilimitadas",
       "Todo en Pro",
-      "Múltiples negocios",
-      "White-label",
-      "Onboarding dedicado",
-      "SLA 99.9%",
-      "Soporte 24/7",
+      "WhatsApp Business",
+      "Soporte directo por email",
     ],
   },
 ];
