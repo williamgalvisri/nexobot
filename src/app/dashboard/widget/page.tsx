@@ -6,6 +6,7 @@ import { Copy, Check, Code, ExternalLink, Loader2 } from "lucide-react";
 export default function WidgetPage() {
   const [copied, setCopied] = useState(false);
   const [businessId, setBusinessId] = useState("");
+  const [plan, setPlan] = useState("FREE");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function WidgetPage() {
         if (!res.ok) throw new Error("Error al cargar datos");
         const data = await res.json();
         setBusinessId(data.business.id);
+        setPlan(data.business.plan || "FREE");
       } catch {
         setBusinessId("error-cargando-id");
       } finally {
@@ -25,6 +27,7 @@ export default function WidgetPage() {
   }, []);
 
   const serverUrl = typeof window !== "undefined" ? window.location.origin : "https://tu-dominio.com";
+  const canHideBranding = plan === "PRO" || plan === "ENTERPRISE";
 
   const widgetCode = `<!-- NexoBot Chat Widget -->
 <script
@@ -32,7 +35,7 @@ export default function WidgetPage() {
   data-business-id="${businessId}"
   data-color="#6366f1"
   data-bot-name="Asistente"
-  data-greeting="Hola! En que puedo ayudarte?"
+  data-greeting="Hola! En que puedo ayudarte?"${canHideBranding ? `\n  data-hide-branding="true"` : ""}
   async>
 </script>`;
 
@@ -99,6 +102,16 @@ export default function WidgetPage() {
               )}
             </button>
           </div>
+
+          {canHideBranding ? (
+            <p className="mt-3 text-sm text-emerald-400">
+              Tu plan {plan} incluye el widget sin branding NexoBot
+            </p>
+          ) : (
+            <p className="mt-3 text-sm text-neutral-500">
+              Actualiza a Pro para remover el branding &quot;Powered by NexoBot&quot;
+            </p>
+          )}
         </div>
 
         {/* Step 2 */}
@@ -133,6 +146,12 @@ export default function WidgetPage() {
               <code className="text-neutral-400">data-position</code>
               <p className="mt-1 text-neutral-500">
                 Posicion: &quot;right&quot; o &quot;left&quot;. Default: right
+              </p>
+            </div>
+            <div className="rounded-lg border border-neutral-700 bg-neutral-800 p-4">
+              <code className="text-neutral-400">data-hide-branding</code>
+              <p className="mt-1 text-neutral-500">
+                Ocultar &quot;Powered by NexoBot&quot;. Solo Pro y Enterprise
               </p>
             </div>
           </div>

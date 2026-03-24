@@ -13,6 +13,7 @@ import {
   LogOut,
   ChevronRight,
   CreditCard,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NexoLogo } from "@/components/Logo";
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/dashboard/leads", label: "Leads", icon: Users },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/widget", label: "Widget", icon: Code },
+  { href: "/dashboard/quick-replies", label: "Respuestas rapidas", icon: Zap },
   { href: "/dashboard/billing", label: "Plan y Uso", icon: CreditCard },
   { href: "/dashboard/settings", label: "Configuración", icon: Settings },
 ];

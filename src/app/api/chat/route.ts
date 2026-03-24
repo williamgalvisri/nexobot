@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateBotResponse, extractLeadInfo } from "@/lib/ai";
+import { sendLeadNotificationEmail } from "@/lib/email";
 import { z } from "zod";
 
 const chatSchema = z.object({
@@ -16,9 +17,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = chatSchema.parse(body);
 
-    // Get business
+    // Get business (include user for lead notification emails)
     const business = await prisma.business.findUnique({
       where: { id: data.businessId },
+      include: { user: { select: { email: true } } },
     });
 
     if (!business) {
@@ -87,6 +89,30 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Check quick replies first (exact match, case-insensitive)
+    const quickReply = await prisma.quickReply.findFirst({
+      where: {
+        businessId: business.id,
+        trigger: { equals: data.message, mode: "insensitive" },
+      },
+    });
+
+    if (quickReply) {
+      // Save quick reply response
+      await prisma.message.create({
+        data: {
+          conversationId: conversation.id,
+          role: "ASSISTANT",
+          content: quickReply.response,
+        },
+      });
+
+      return NextResponse.json({
+        conversationId: conversation.id,
+        message: quickReply.response,
+      });
+    }
+
     // Build message history for AI
     const history = [
       ...conversation.messages.map((m: { role: string; content: string }) => ({
@@ -125,6 +151,11 @@ export async function POST(req: NextRequest) {
       history.map((m) => `${m.role}: ${m.content}`).join("\n")
     ).then(async (leadInfo) => {
       if (leadInfo && (leadInfo.name || leadInfo.email || leadInfo.phone)) {
+        // Check if lead already exists (to detect new vs update)
+        const existingLead = await prisma.lead.findUnique({
+          where: { id: `${conversation.id}-lead` },
+        });
+
         await prisma.lead.upsert({
           where: {
             id: `${conversation.id}-lead`,
@@ -142,6 +173,19 @@ export async function POST(req: NextRequest) {
             phone: leadInfo.phone ?? undefined,
           },
         });
+
+        // Send email notification only for NEW leads and non-FREE plans
+        if (!existingLead && effectivePlan !== "FREE" && business.user?.email) {
+          const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+          sendLeadNotificationEmail({
+            ownerEmail: business.user.email,
+            leadName: leadInfo.name ?? null,
+            leadEmail: leadInfo.email ?? null,
+            leadPhone: leadInfo.phone ?? null,
+            source: "WIDGET",
+            appUrl,
+          }).catch(() => {}); // Don't block on email failure
+        }
       }
     }).catch(() => {}); // Silently fail — don't block the chat
 

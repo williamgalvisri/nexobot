@@ -607,7 +607,9 @@ function Pricing() {
       features: [
         "500 conversaciones/mes",
         "Widget para tu sitio web",
-        "Captura automática de leads",
+        "Captura de leads + gestión",
+        "Notificación de leads por email",
+        "Exportar leads a CSV",
         "Dashboard de analytics",
       ],
       cta: "Elegir Starter",
@@ -620,10 +622,10 @@ function Pricing() {
       description: "Para negocios serios",
       features: [
         "2,000 conversaciones/mes",
+        "Todo en Starter",
         "WhatsApp Business",
-        "Widget personalizable",
-        "Captura automática de leads",
-        "Dashboard de analytics",
+        "Widget sin branding NexoBot",
+        "Respuestas rápidas personalizadas",
       ],
       cta: "Elegir Pro",
       popular: true,
@@ -636,7 +638,6 @@ function Pricing() {
       features: [
         "Conversaciones ilimitadas",
         "Todo en Pro",
-        "WhatsApp Business",
         "Soporte directo por email",
       ],
       cta: "Contactar ventas",

@@ -19,6 +19,7 @@
   var greeting =
     script.getAttribute("data-greeting") || "¡Hola! ¿En qué puedo ayudarte?";
   var botName = script.getAttribute("data-bot-name") || "Asistente";
+  var hideBranding = script.getAttribute("data-hide-branding") === "true";
   var apiUrl =
     script.getAttribute("data-api-url") ||
     script.src.replace(/\/widget\.js.*$/, "/api/chat");
@@ -180,7 +181,7 @@
     '  <textarea id="nexobot-input" placeholder="Escribe un mensaje..." rows="1" maxlength="' + MAX_LENGTH + '"></textarea>',
     '  <button id="nexobot-send" aria-label="Enviar mensaje" disabled><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>',
     "</div>",
-    '<div id="nexobot-powered"><a href="https://nexobot.com" target="_blank" rel="noopener">Powered by NexoBot</a></div>',
+    hideBranding ? '' : '<div id="nexobot-powered"><a href="https://nexobot.com" target="_blank" rel="noopener">Powered by NexoBot</a></div>',
   ].join("");
 
   widget.appendChild(bubble);

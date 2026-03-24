@@ -43,6 +43,154 @@ export async function sendWelcomeEmail({
   }
 }
 
+export async function sendLeadNotificationEmail({
+  ownerEmail,
+  leadName,
+  leadEmail,
+  leadPhone,
+  source,
+  appUrl,
+}: {
+  ownerEmail: string;
+  leadName: string | null;
+  leadEmail: string | null;
+  leadPhone: string | null;
+  source: string;
+  appUrl: string;
+}) {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("RESEND_API_KEY not set, skipping lead notification email");
+    return;
+  }
+
+  const fromEmail =
+    process.env.EMAIL_FROM || "NexoBot <onboarding@resend.dev>";
+  const displayName = leadName || "Sin nombre";
+
+  try {
+    await resend.emails.send({
+      from: fromEmail,
+      to: ownerEmail,
+      subject: `Nuevo lead capturado — ${displayName}`,
+      html: buildLeadNotificationHtml({
+        leadName: displayName,
+        leadEmail,
+        leadPhone,
+        source,
+        appUrl,
+      }),
+    });
+  } catch (error) {
+    console.error("Failed to send lead notification email:", error);
+  }
+}
+
+function buildLeadNotificationHtml({
+  leadName,
+  leadEmail,
+  leadPhone,
+  source,
+  appUrl,
+}: {
+  leadName: string;
+  leadEmail: string | null;
+  leadPhone: string | null;
+  source: string;
+  appUrl: string;
+}) {
+  const sourceLabel = source === "WHATSAPP" ? "WhatsApp" : "Widget";
+  const sourceEmoji = source === "WHATSAPP" ? "\uD83D\uDCF1" : "\uD83C\uDF10";
+  const now = new Date().toLocaleString("es-MX", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  return `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#030712;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#030712;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+        <!-- Header -->
+        <tr><td style="padding:32px 40px;text-align:center;">
+          <div style="display:inline-block;background-color:#4f46e5;border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+            <span style="color:#fff;font-size:20px;font-weight:700;">NexoBot</span>
+          </div>
+        </td></tr>
+
+        <!-- Main Card -->
+        <tr><td>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#111827;border-radius:16px;border:1px solid rgba(255,255,255,0.05);">
+            <tr><td style="padding:48px 40px;">
+
+              <h1 style="margin:0 0 8px;color:#fff;font-size:28px;font-weight:700;">
+                Nuevo lead capturado
+              </h1>
+              <p style="margin:0 0 32px;color:#9ca3af;font-size:16px;line-height:1.6;">
+                Tu asistente AI ha capturado un nuevo lead. Aqu\u00ed tienes los detalles:
+              </p>
+
+              <!-- Lead Details -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+                <tr><td style="padding:20px;background-color:rgba(79,70,229,0.1);border-radius:12px;border:1px solid rgba(79,70,229,0.2);">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr><td style="padding:8px 0;color:#d1d5db;font-size:15px;">
+                      <span style="color:#818cf8;font-weight:700;margin-right:8px;">Nombre:</span>
+                      ${leadName}
+                    </td></tr>
+                    <tr><td style="padding:8px 0;color:#d1d5db;font-size:15px;">
+                      <span style="color:#818cf8;font-weight:700;margin-right:8px;">Email:</span>
+                      ${leadEmail || "No proporcionado"}
+                    </td></tr>
+                    <tr><td style="padding:8px 0;color:#d1d5db;font-size:15px;">
+                      <span style="color:#818cf8;font-weight:700;margin-right:8px;">Tel\u00e9fono:</span>
+                      ${leadPhone || "No proporcionado"}
+                    </td></tr>
+                    <tr><td style="padding:8px 0;color:#d1d5db;font-size:15px;">
+                      <span style="color:#818cf8;font-weight:700;margin-right:8px;">Canal:</span>
+                      ${sourceEmoji} ${sourceLabel}
+                    </td></tr>
+                    <tr><td style="padding:8px 0;color:#d1d5db;font-size:15px;">
+                      <span style="color:#818cf8;font-weight:700;margin-right:8px;">Fecha:</span>
+                      ${now}
+                    </td></tr>
+                  </table>
+                </td></tr>
+              </table>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr><td align="center">
+                  <a href="${appUrl}/dashboard/leads"
+                     style="display:inline-block;background-color:#4f46e5;color:#fff;font-size:16px;font-weight:600;text-decoration:none;padding:14px 40px;border-radius:12px;">
+                    Ver mis Leads \u2192
+                  </a>
+                </td></tr>
+              </table>
+
+            </td></tr>
+          </table>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="padding:32px 40px;text-align:center;">
+          <p style="margin:0;color:#4b5563;font-size:12px;line-height:1.5;">
+            \u00A9 ${new Date().getFullYear()} NexoBot. Todos los derechos reservados.<br/>
+            <a href="${appUrl}" style="color:#6366f1;text-decoration:none;">nexobotai.com</a>
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
 function buildWelcomeHtml({
   name,
   businessName,
