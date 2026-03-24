@@ -242,6 +242,19 @@ function Hero() {
             </div>
           </Animated>
         </div>
+        {/* Hero Banner Image */}
+        <Animated delay={0.5} className="mt-20">
+          <div className="overflow-hidden rounded-3xl border border-neutral-200 shadow-2xl shadow-neutral-200/50">
+            <Image
+              src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1400&q=80"
+              alt="Equipo de negocios usando NexoBot para automatizar atención al cliente"
+              width={1400}
+              height={600}
+              className="w-full object-cover"
+              priority
+            />
+          </div>
+        </Animated>
       </div>
     </section>
   );
@@ -470,8 +483,8 @@ function HowItWorks() {
             <div className="relative">
               <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-white">
                 <Image
-                  src="https://images.unsplash.com/photo-1556761175-5973bc0b7e09?auto=format&fit=crop&w=800&q=80"
-                  alt="Equipo usando NexoBot"
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
+                  alt="Equipo colaborando con NexoBot"
                   width={800}
                   height={600}
                   className="w-full object-cover"
