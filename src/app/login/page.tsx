@@ -5,17 +5,17 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { NexoLogo } from "@/components/Logo";
+import { useToast } from "@/components/Toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     const result = await signIn("credentials", {
       email,
@@ -24,7 +24,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setError("Email o contraseña incorrectos");
+      showToast("Email o contraseña incorrectos", "error");
       setLoading(false);
     } else {
       window.location.href = "/dashboard";
@@ -80,10 +80,6 @@ export default function LoginPage() {
                 />
               </div>
             </div>
-
-            {error && (
-              <p className="text-sm text-red-400 text-center">{error}</p>
-            )}
 
             <button
               type="submit"

@@ -10,11 +10,11 @@ import {
   Settings,
   BarChart3,
   Code,
-  Bot,
   LogOut,
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NexoLogo } from "@/components/Logo";
 
 const navItems = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
@@ -33,14 +33,13 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen bg-gray-950">
+    <div className="flex h-screen bg-neutral-950">
       {/* Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-white/5 bg-gray-900/50 md:flex">
-        <div className="flex items-center gap-2 px-6 py-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
-            <Bot className="h-4 w-4 text-white" />
+      <aside className="hidden w-64 flex-col border-r border-neutral-800 bg-neutral-900 md:flex">
+        <div className="flex items-center px-6 py-5">
+          <div className="text-white">
+            <NexoLogo height="h-4" />
           </div>
-          <span className="text-lg font-bold">NexoBot</span>
         </div>
 
         <nav className="flex-1 space-y-1 px-3 py-4">
@@ -56,26 +55,26 @@ export default function DashboardLayout({
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
                   isActive
-                    ? "bg-brand-600/10 text-brand-400"
-                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                    ? "bg-neutral-800 text-white"
+                    : "text-neutral-500 hover:text-white hover:bg-neutral-800/50"
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className={cn("h-5 w-5", isActive ? "text-white" : "text-neutral-400")} />
                 {item.label}
                 {isActive && (
-                  <ChevronRight className="ml-auto h-4 w-4 text-brand-400" />
+                  <ChevronRight className="ml-auto h-4 w-4 text-white" />
                 )}
               </Link>
             );
           })}
         </nav>
 
-        <div className="border-t border-white/5 px-3 py-4">
+        <div className="border-t border-neutral-800 px-3 py-4">
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-500 hover:bg-neutral-800/50 hover:text-white transition"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-5 w-5 text-neutral-400" />
             Cerrar sesion
           </button>
         </div>

@@ -39,7 +39,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-400" />
       </div>
     );
   }
@@ -70,8 +70,8 @@ export default function AnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Analytics</h1>
-        <p className="mt-1 text-sm text-gray-400">
+        <h1 className="text-2xl font-bold text-white">Analytics</h1>
+        <p className="mt-1 text-sm text-neutral-400">
           Resumen de actividad de tu negocio
         </p>
       </div>
@@ -81,46 +81,48 @@ export default function AnalyticsPage() {
         {summaryStats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-white/5 bg-gray-900/50 p-6"
+            className="rounded-xl border border-neutral-800 bg-neutral-900 p-6"
           >
             <div className="flex items-center justify-between">
-              <stat.icon className="h-5 w-5 text-brand-400" />
+              <div className="rounded-lg bg-neutral-800 p-2 w-fit">
+                <stat.icon className="h-5 w-5 text-neutral-400" />
+              </div>
             </div>
-            <p className="mt-3 text-2xl font-bold">{stat.value}</p>
-            <p className="text-sm text-gray-400">{stat.label}</p>
+            <p className="mt-3 text-2xl font-bold text-white">{stat.value}</p>
+            <p className="text-sm text-neutral-400">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Bar Chart - not enough data */}
-      <div className="mb-8 rounded-xl border border-white/5 bg-gray-900/50 p-6">
-        <h2 className="mb-6 text-lg font-semibold">Conversaciones por dia</h2>
-        <div className="flex items-center justify-center h-48 text-gray-500 text-sm">
+      <div className="mb-8 rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+        <h2 className="mb-6 text-lg font-semibold text-white">Conversaciones por dia</h2>
+        <div className="flex items-center justify-center h-48 text-neutral-500 text-sm">
           Sin datos suficientes para mostrar la grafica
         </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Top Questions */}
-        <div className="rounded-xl border border-white/5 bg-gray-900/50 p-6">
-          <h2 className="mb-4 text-lg font-semibold">Preguntas mas frecuentes</h2>
-          <div className="flex items-center justify-center h-32 text-gray-500 text-sm">
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+          <h2 className="mb-4 text-lg font-semibold text-white">Preguntas mas frecuentes</h2>
+          <div className="flex items-center justify-center h-32 text-neutral-500 text-sm">
             Sin datos suficientes
           </div>
         </div>
 
         {/* Channel Distribution */}
-        <div className="rounded-xl border border-white/5 bg-gray-900/50 p-6">
-          <h2 className="mb-4 text-lg font-semibold">Distribucion por canal</h2>
-          <div className="flex items-center justify-center h-32 text-gray-500 text-sm">
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+          <h2 className="mb-4 text-lg font-semibold text-white">Distribucion por canal</h2>
+          <div className="flex items-center justify-center h-32 text-neutral-500 text-sm">
             Sin datos suficientes
           </div>
 
           <div className="mt-8">
-            <h3 className="mb-3 text-sm font-medium text-gray-300">
+            <h3 className="mb-3 text-sm font-medium text-neutral-400">
               Horarios pico
             </h3>
-            <div className="flex items-center justify-center h-16 text-gray-500 text-sm">
+            <div className="flex items-center justify-center h-16 text-neutral-500 text-sm">
               Sin datos suficientes
             </div>
           </div>

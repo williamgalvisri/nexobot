@@ -80,14 +80,14 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-neutral-400" />
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className="text-center text-gray-400 py-20">
+      <div className="text-center text-neutral-400 py-20">
         No se pudo cargar el dashboard
       </div>
     );
@@ -120,8 +120,8 @@ export default function DashboardPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-400">
+        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        <p className="mt-1 text-sm text-neutral-400">
           {data.business.name} — Plan {data.business.plan}
         </p>
       </div>
@@ -131,14 +131,14 @@ export default function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-white/5 bg-gray-900/50 p-6"
+            className="rounded-xl border border-neutral-800 bg-neutral-900 p-6"
           >
-            <div className="rounded-lg bg-brand-600/10 p-2 w-fit">
-              <stat.icon className="h-5 w-5 text-brand-400" />
+            <div className="rounded-lg bg-neutral-800 p-2 w-fit">
+              <stat.icon className="h-5 w-5 text-neutral-400" />
             </div>
             <div className="mt-4">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-gray-400">{stat.label}</p>
+              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-sm text-neutral-400">{stat.label}</p>
             </div>
           </div>
         ))}
@@ -146,23 +146,23 @@ export default function DashboardPage() {
 
       {/* Recent Conversations */}
       <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold">
+        <h2 className="mb-4 text-lg font-semibold text-white">
           Conversaciones recientes
         </h2>
         {data.recentConversations.length === 0 ? (
-          <div className="rounded-xl border border-white/5 bg-gray-900/50 p-12 text-center">
-            <MessageSquare className="mx-auto h-12 w-12 text-gray-600 mb-3" />
-            <p className="text-gray-400">Aún no hay conversaciones</p>
-            <p className="text-sm text-gray-500 mt-1">
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-12 text-center">
+            <MessageSquare className="mx-auto h-12 w-12 text-neutral-500 mb-3" />
+            <p className="text-neutral-400">Aún no hay conversaciones</p>
+            <p className="text-sm text-neutral-500 mt-1">
               Cuando tus clientes chatean con tu bot, aparecerán aquí
             </p>
           </div>
         ) : (
-          <div className="rounded-xl border border-white/5 bg-gray-900/50 overflow-hidden">
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-white/5 text-left text-xs text-gray-400">
+                  <tr className="border-b border-neutral-800 text-left text-xs text-neutral-400">
                     <th className="px-6 py-3 font-medium">Cliente</th>
                     <th className="px-6 py-3 font-medium">Último mensaje</th>
                     <th className="px-6 py-3 font-medium">Canal</th>
@@ -174,11 +174,11 @@ export default function DashboardPage() {
                   {data.recentConversations.map((conv) => (
                     <tr
                       key={conv.id}
-                      className="border-b border-white/5 hover:bg-white/[.02] transition"
+                      className="border-b border-neutral-800 hover:bg-neutral-800/50 transition"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600/20 text-xs font-medium text-brand-400">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 text-xs font-medium text-neutral-400">
                             {conv.customerName
                               .split(" ")
                               .map((n) => n[0])
@@ -186,37 +186,37 @@ export default function DashboardPage() {
                               .slice(0, 2)}
                           </div>
                           <div>
-                            <span className="text-sm font-medium">
+                            <span className="text-sm font-medium text-white">
                               {conv.customerName}
                             </span>
                             {conv.customerPhone && (
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-neutral-500">
                                 {conv.customerPhone}
                               </p>
                             )}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-400 max-w-xs truncate">
+                      <td className="px-6 py-4 text-sm text-neutral-400 max-w-xs truncate">
                         {conv.lastMessageRole === "ASSISTANT" && (
-                          <span className="text-brand-400 mr-1">Bot:</span>
+                          <span className="text-neutral-500 mr-1">Bot:</span>
                         )}
                         {conv.lastMessage.slice(0, 80)}
                       </td>
                       <td className="px-6 py-4">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-xs text-gray-300">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-800 px-2.5 py-1 text-xs text-neutral-400">
                           {conv.channel === "WHATSAPP" ? "📱 WhatsApp" : "🌐 Widget"}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-400">
+                      <td className="px-6 py-4 text-sm text-neutral-400">
                         {timeAgo(conv.updatedAt)}
                       </td>
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
                             conv.status === "ACTIVE"
-                              ? "bg-green-500/10 text-green-400"
-                              : "bg-gray-500/10 text-gray-400"
+                              ? "bg-emerald-500/10 text-emerald-400"
+                              : "bg-neutral-800 text-neutral-400"
                           }`}
                         >
                           {conv.status === "ACTIVE" ? "Activa" : "Cerrada"}
@@ -232,12 +232,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Widget Install Banner */}
-      <div className="mt-8 rounded-xl border border-brand-500/20 bg-brand-600/5 p-6">
+      <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-900 p-6">
         <div className="flex items-center gap-3">
-          <Bot className="h-8 w-8 text-brand-400" />
+          <Bot className="h-8 w-8 text-neutral-400" />
           <div>
-            <p className="font-medium">Tu Business ID para el widget:</p>
-            <code className="text-sm text-brand-300 bg-gray-800 px-2 py-1 rounded mt-1 inline-block">
+            <p className="font-medium text-white">Tu Business ID para el widget:</p>
+            <code className="text-sm text-neutral-400 bg-neutral-800 px-2 py-1 rounded mt-1 inline-block">
               {data.business.id}
             </code>
           </div>
