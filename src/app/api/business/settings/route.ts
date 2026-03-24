@@ -14,6 +14,13 @@ const settingsSchema = z.object({
   widgetColor: z.string().optional(),
   whatsappPhoneId: z.string().optional(),
   whatsappToken: z.string().optional(),
+  industry: z.string().optional(),
+  address: z.string().optional(),
+  services: z.string().optional(),
+  prices: z.string().optional(),
+  hours: z.string().optional(),
+  policies: z.string().optional(),
+  faq: z.string().optional(),
 });
 
 export async function PUT(req: NextRequest) {
@@ -48,6 +55,13 @@ export async function PUT(req: NextRequest) {
         ...(data.widgetColor !== undefined && { widgetColor: data.widgetColor }),
         ...(data.whatsappPhoneId !== undefined && { whatsappPhoneId: data.whatsappPhoneId || null }),
         ...(data.whatsappToken !== undefined && data.whatsappToken && { whatsappToken: data.whatsappToken }),
+        ...(data.industry !== undefined && { industry: data.industry }),
+        ...(data.address !== undefined && { address: data.address }),
+        ...(data.services !== undefined && { services: data.services }),
+        ...(data.prices !== undefined && { prices: data.prices }),
+        ...(data.hours !== undefined && { hours: data.hours }),
+        ...(data.policies !== undefined && { policies: data.policies }),
+        ...(data.faq !== undefined && { faq: data.faq }),
       },
     });
 

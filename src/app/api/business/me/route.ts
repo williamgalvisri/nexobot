@@ -70,6 +70,13 @@ export async function GET() {
       widgetColor: business.widgetColor,
       whatsappPhoneId: business.whatsappPhoneId,
       whatsappConnected: !!business.whatsappToken,
+      industry: business.industry,
+      address: business.address,
+      services: business.services,
+      prices: business.prices,
+      hours: business.hours,
+      policies: business.policies,
+      faq: business.faq,
     },
     stats: {
       conversationsToday,

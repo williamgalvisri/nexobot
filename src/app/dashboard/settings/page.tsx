@@ -78,6 +78,14 @@ export default function SettingsPage() {
         setBusinessName(b.name ?? "");
         setWhatsappPhoneId(b.whatsappPhoneId ?? "");
         setWhatsappConnected(b.whatsappConnected ?? false);
+        // Business info fields
+        setIndustry(b.industry ?? "");
+        setAddress(b.address ?? "");
+        setServices(b.services ?? "");
+        setPrices(b.prices ?? "");
+        setHours(b.hours ?? "");
+        setPolicies(b.policies ?? "");
+        setFaq(b.faq ?? "");
         // If there's already context, collapse the form
         if (b.botContext) setShowForm(false);
       } catch {
@@ -109,6 +117,13 @@ export default function SettingsPage() {
           widgetColor,
           whatsappPhoneId,
           ...(whatsappToken && { whatsappToken }),
+          industry,
+          address,
+          services,
+          prices,
+          hours,
+          policies,
+          faq,
         }),
       });
       if (!res.ok) throw new Error("Error al guardar");
