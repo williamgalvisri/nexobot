@@ -155,106 +155,94 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white pt-28 pb-20 md:pt-36 lg:pt-44 lg:pb-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
-          {/* Left: Copy */}
-          <div>
-            <Animated>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm text-neutral-600">
-                <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                Potenciado por Inteligencia Artificial
+    <section className="relative min-h-[90vh] overflow-hidden">
+      {/* Background image */}
+      <Image
+        src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1920&q=80"
+        alt=""
+        fill
+        className="object-cover"
+        priority
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/70" />
+
+      <div className="relative mx-auto flex min-h-[90vh] max-w-7xl items-center px-6 pt-24">
+        <div className="max-w-2xl py-20">
+          <Animated>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/80 px-4 py-2 text-sm text-neutral-600 backdrop-blur-sm">
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+              Potenciado por Inteligencia Artificial
+            </div>
+          </Animated>
+
+          <Animated delay={0.1}>
+            <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-neutral-900 sm:text-5xl lg:text-6xl xl:text-7xl">
+              Tu empleado AI
+              <br />
+              que nunca
+              <br />
+              <span className="text-neutral-400">duerme.</span>
+            </h1>
+          </Animated>
+
+          <Animated delay={0.2}>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-neutral-500">
+              Automatiza la atención al cliente de tu negocio. Responde en
+              WhatsApp y tu sitio web 24/7. Captura leads y agenda citas
+              mientras duermes.
+            </p>
+          </Animated>
+
+          <Animated delay={0.3}>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/register"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-4 text-base font-medium text-white transition hover:bg-neutral-800"
+              >
+                Empezar gratis
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <a
+                href="#demo"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-neutral-300 bg-white/60 px-8 py-4 text-base font-medium text-neutral-700 backdrop-blur-sm transition hover:bg-white"
+              >
+                Ver demo
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </Animated>
+
+          <Animated delay={0.4}>
+            <div className="mt-12 flex items-center gap-5">
+              <div className="flex -space-x-3">
+                {[
+                  "photo-1507003211169-0a1dd7228f2d",
+                  "photo-1494790108377-be9c29b29330",
+                  "photo-1472099645785-5658abf4ff4e",
+                  "photo-1438761681033-6461ffad8d80",
+                  "photo-1500648767791-00dcc994a43e",
+                ].map((id) => (
+                  <div
+                    key={id}
+                    className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-white"
+                  >
+                    <Image
+                      src={`https://images.unsplash.com/${id}?auto=format&fit=crop&w=80&q=80`}
+                      alt=""
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
               </div>
-            </Animated>
-
-            <Animated delay={0.1}>
-              <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-neutral-900 sm:text-5xl lg:text-6xl">
-                Tu empleado AI
-                <br />
-                que nunca
-                <br />
-                <span className="text-neutral-400">duerme.</span>
-              </h1>
-            </Animated>
-
-            <Animated delay={0.2}>
-              <p className="mt-6 max-w-md text-lg leading-relaxed text-neutral-500">
-                Automatiza la atención al cliente de tu negocio. Responde en
-                WhatsApp y tu sitio web 24/7. Captura leads y agenda citas
-                mientras duermes.
-              </p>
-            </Animated>
-
-            <Animated delay={0.3}>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/register"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-4 text-base font-medium text-white transition hover:bg-neutral-800"
-                >
-                  Empezar gratis
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-                <a
-                  href="#demo"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-neutral-200 px-8 py-4 text-base font-medium text-neutral-700 transition hover:bg-neutral-50"
-                >
-                  Ver demo
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
+              <div className="text-sm text-neutral-500">
+                <span className="font-semibold text-neutral-900">+500</span>{" "}
+                negocios confían en NexoBot
               </div>
-            </Animated>
-
-            <Animated delay={0.4}>
-              <div className="mt-12 flex items-center gap-5">
-                <div className="flex -space-x-3">
-                  {[
-                    "photo-1507003211169-0a1dd7228f2d",
-                    "photo-1494790108377-be9c29b29330",
-                    "photo-1472099645785-5658abf4ff4e",
-                    "photo-1438761681033-6461ffad8d80",
-                    "photo-1500648767791-00dcc994a43e",
-                  ].map((id) => (
-                    <div
-                      key={id}
-                      className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-white"
-                    >
-                      <Image
-                        src={`https://images.unsplash.com/${id}?auto=format&fit=crop&w=80&q=80`}
-                        alt=""
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="text-sm text-neutral-500">
-                  <span className="font-semibold text-neutral-900">+500</span>{" "}
-                  negocios confían en NexoBot
-                </div>
-              </div>
-            </Animated>
-          </div>
-
-          {/* Right: Chat Demo */}
-          <Animated delay={0.2} className="relative">
-            <div id="demo">
-              <ChatDemo />
             </div>
           </Animated>
         </div>
-        {/* Hero Banner Image */}
-        <Animated delay={0.5} className="mt-20">
-          <div className="overflow-hidden rounded-3xl border border-neutral-200 shadow-2xl shadow-neutral-200/50">
-            <Image
-              src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1400&q=80"
-              alt="Equipo de negocios usando NexoBot para automatizar atención al cliente"
-              width={1400}
-              height={600}
-              className="w-full object-cover"
-              priority
-            />
-          </div>
-        </Animated>
       </div>
     </section>
   );
@@ -361,6 +349,55 @@ function Stats() {
             </div>
           </Animated>
         ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── Demo Section ──────────────────────────────────── */
+
+function DemoSection() {
+  return (
+    <section id="demo" className="section-light py-28">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid items-center gap-16 lg:grid-cols-2">
+          {/* Left: Copy */}
+          <Animated>
+            <div>
+              <p className="mb-3 text-sm font-medium uppercase tracking-widest text-neutral-400">
+                Demo en vivo
+              </p>
+              <h2 className="text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl">
+                Mira cómo tu bot atiende clientes
+              </h2>
+              <p className="mt-4 max-w-md text-neutral-500">
+                NexoBot entiende el contexto de tu negocio, agenda citas, responde
+                preguntas y captura leads de forma natural — todo automático.
+              </p>
+
+              <div className="mt-8 space-y-4">
+                {[
+                  "Respuestas instantáneas y naturales",
+                  "Captura de datos de contacto automática",
+                  "Agendamiento de citas inteligente",
+                  "Escalamiento a humano cuando es necesario",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-900">
+                      <Check className="h-3.5 w-3.5 text-white" />
+                    </div>
+                    <span className="text-sm text-neutral-600">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Animated>
+
+          {/* Right: Chat Demo */}
+          <Animated delay={0.15}>
+            <ChatDemo />
+          </Animated>
+        </div>
       </div>
     </section>
   );
@@ -1072,6 +1109,7 @@ export default function HomePage() {
       <Navbar />
       <Hero />
       <Stats />
+      <DemoSection />
       <Features />
       <HowItWorks />
       <Pricing />
