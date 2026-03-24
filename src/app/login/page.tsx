@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Bot, Mail, Lock, ArrowRight } from "lucide-react";
 
@@ -8,12 +9,25 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // In production: signIn("credentials", { email, password, redirect: true, callbackUrl: "/dashboard" })
-    window.location.href = "/dashboard";
+    setError("");
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Email o contraseña incorrectos");
+      setLoading(false);
+    } else {
+      window.location.href = "/dashboard";
+    }
   };
 
   return (
@@ -85,6 +99,10 @@ export default function LoginPage() {
                 />
               </div>
             </div>
+
+            {error && (
+              <p className="text-sm text-red-400 text-center">{error}</p>
+            )}
 
             <button
               type="submit"
