@@ -25,6 +25,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Business not found" }, { status: 404 });
     }
 
+    // Check plan limits
+    const now = new Date();
+    const isTrialExpired = business.planExpiresAt && business.planExpiresAt < now;
+    const effectivePlan = isTrialExpired ? "FREE" : business.plan;
+
+    // If trial expired, downgrade the business
+    if (isTrialExpired && business.plan !== "FREE") {
+      await prisma.business.update({
+        where: { id: business.id },
+        data: { plan: "FREE" },
+      });
+    }
+
+    // Count conversations this month
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const conversationCount = await prisma.conversation.count({
+      where: { businessId: business.id, createdAt: { gte: startOfMonth } },
+    });
+
+    // Plan limits
+    const limits: Record<string, number> = {
+      FREE: 50, STARTER: 500, PRO: 2000, ENTERPRISE: -1,
+    };
+    const limit = limits[effectivePlan] ?? 50;
+
+    if (limit !== -1 && conversationCount >= limit) {
+      return NextResponse.json(
+        { error: "Has alcanzado el límite de conversaciones de tu plan. Actualiza tu plan para continuar.", code: "PLAN_LIMIT" },
+        { status: 429 }
+      );
+    }
+
     // Get or create conversation
     let conversation;
     if (data.conversationId) {

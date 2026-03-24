@@ -78,7 +78,7 @@ export default function RegisterPage() {
           {/* Benefits */}
           <div className="mb-6 rounded-lg border border-neutral-700 bg-neutral-800 p-4">
             <p className="mb-2 text-sm font-medium text-white">
-              Incluye 14 días gratis del plan Pro:
+              Incluye 7 días gratis del plan Pro:
             </p>
             <ul className="space-y-1.5">
               {[

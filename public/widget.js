@@ -425,9 +425,15 @@
 
       if (!res.ok) {
         var errorMsg = "Lo siento, hubo un error. Intenta de nuevo.";
-        if (res.status === 429)
-          errorMsg = "Estás enviando mensajes muy rápido. Espera unos segundos.";
-        else if (res.status === 400)
+        if (res.status === 429) {
+          var errorData = null;
+          try { errorData = await res.json(); } catch(e) {}
+          if (errorData && errorData.code === "PLAN_LIMIT") {
+            errorMsg = "Este negocio ha alcanzado su límite mensual. Por favor contacta directamente.";
+          } else {
+            errorMsg = "Estás enviando mensajes muy rápido. Espera unos segundos.";
+          }
+        } else if (res.status === 400)
           errorMsg = "El mensaje no es válido. Intenta con uno más corto.";
         else if (res.status === 404)
           errorMsg = "Este chat no está disponible en este momento.";

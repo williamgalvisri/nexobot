@@ -46,6 +46,8 @@ export async function POST(req: NextRequest) {
           name: data.businessName,
           slug: slugify(data.businessName) + "-" + user.id.slice(0, 6),
           userId: user.id,
+          plan: "PRO",
+          planExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
         },
       });
 

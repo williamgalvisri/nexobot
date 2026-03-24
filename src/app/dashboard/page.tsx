@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   MessageSquare,
   Users,
@@ -8,7 +9,19 @@ import {
   Clock,
   Bot,
   Loader2,
+  AlertTriangle,
+  Info,
+  ArrowRight,
 } from "lucide-react";
+
+interface UsageData {
+  plan: string;
+  conversationsUsed: number;
+  conversationsLimit: number;
+  trialDaysLeft: number | null;
+  isTrialActive: boolean;
+  planExpiresAt: string | null;
+}
 
 interface DashboardData {
   business: {
@@ -55,13 +68,20 @@ function timeAgo(date: string): string {
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const [usage, setUsage] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api/business/me");
-      if (res.ok) {
-        setData(await res.json());
+      const [meRes, usageRes] = await Promise.all([
+        fetch("/api/business/me"),
+        fetch("/api/business/usage"),
+      ]);
+      if (meRes.ok) {
+        setData(await meRes.json());
+      }
+      if (usageRes.ok) {
+        setUsage(await usageRes.json());
       }
     } catch {
       // ignore
@@ -125,6 +145,33 @@ export default function DashboardPage() {
           {data.business.name} — Plan {data.business.plan}
         </p>
       </div>
+
+      {/* Trial / Usage Banner */}
+      {usage && usage.isTrialActive && usage.trialDaysLeft !== null && (
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-neutral-700 bg-neutral-800/50 px-5 py-3">
+          <Info className="h-5 w-5 shrink-0 text-neutral-400" />
+          <p className="text-sm text-neutral-300">
+            Estás en tu prueba Pro — Te quedan <span className="font-semibold text-white">{usage.trialDaysLeft} días</span>
+          </p>
+        </div>
+      )}
+      {usage && !usage.isTrialActive && usage.plan === "FREE" && (
+        <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 px-5 py-3">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-500" />
+            <p className="text-sm text-neutral-300">
+              Tu prueba terminó. Actualiza tu plan para más conversaciones.
+            </p>
+          </div>
+          <Link
+            href="/dashboard/billing"
+            className="flex shrink-0 items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-neutral-100 transition"
+          >
+            Actualizar plan
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

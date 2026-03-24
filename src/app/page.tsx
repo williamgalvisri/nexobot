@@ -738,7 +738,7 @@ function Pricing() {
 
         <Animated>
           <p className="mt-10 text-center text-sm text-neutral-400">
-            Todos los planes incluyen 14 días de prueba gratis del plan Pro. Sin
+            Todos los planes incluyen 7 días de prueba gratis del plan Pro. Sin
             tarjeta de crédito.
           </p>
         </Animated>
@@ -990,7 +990,7 @@ function FinalCTA() {
               href="/register"
               className="group inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-base font-semibold text-neutral-900 transition hover:bg-neutral-100"
             >
-              Empezar gratis — 14 días Pro
+              Empezar gratis — 7 días Pro
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
