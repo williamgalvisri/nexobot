@@ -1,8 +1,13 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+let _openai: OpenAI | null = null;
+
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return _openai;
+}
 
 interface ChatContext {
   businessName: string;
@@ -24,18 +29,22 @@ export async function generateBotResponse(
 ): Promise<string> {
   const systemPrompt = buildSystemPrompt(context);
 
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
+  const response = await getOpenAI().chat.completions.create({
+    model: "gpt-4o-mini",
     max_tokens: 1024,
-    system: systemPrompt,
-    messages: messages.map((m) => ({
-      role: m.role,
-      content: m.content,
-    })),
+    messages: [
+      { role: "system", content: systemPrompt },
+      ...messages.map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
+    ],
   });
 
-  const textBlock = response.content.find((block) => block.type === "text");
-  return textBlock?.text ?? "Lo siento, no pude procesar tu mensaje.";
+  return (
+    response.choices[0]?.message?.content ??
+    "Lo siento, no pude procesar tu mensaje."
+  );
 }
 
 function buildSystemPrompt(context: ChatContext): string {
@@ -68,19 +77,26 @@ Hazlo de forma natural, no como un formulario.`;
 export async function extractLeadInfo(
   conversation: string
 ): Promise<{ name?: string; email?: string; phone?: string } | null> {
-  const response = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
+  const response = await getOpenAI().chat.completions.create({
+    model: "gpt-4o-mini",
     max_tokens: 256,
-    system:
-      "Extract contact information from the conversation. Return JSON with name, email, phone fields. Only include fields that were explicitly provided. Return null if no contact info found.",
-    messages: [{ role: "user", content: conversation }],
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content:
+          "Extract contact information from the conversation. Return JSON with name, email, phone fields. Only include fields that were explicitly provided. Return empty object {} if no contact info found.",
+      },
+      { role: "user", content: conversation },
+    ],
   });
 
-  const textBlock = response.content.find((block) => block.type === "text");
-  if (!textBlock) return null;
-
   try {
-    return JSON.parse(textBlock.text);
+    const text = response.choices[0]?.message?.content;
+    if (!text) return null;
+    const data = JSON.parse(text);
+    if (!data.name && !data.email && !data.phone) return null;
+    return data;
   } catch {
     return null;
   }
