@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { Bot, Mail, Lock, User, Building, ArrowRight, Check } from "lucide-react";
+import { Mail, Lock, User, Building, ArrowRight, Check } from "lucide-react";
+import { NexoLogo } from "@/components/Logo";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -47,11 +48,8 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white">
-              <Bot className="h-6 w-6 text-neutral-900" />
-            </div>
-            <span className="text-2xl font-bold text-white">NexoBot</span>
+          <Link href="/" className="text-2xl text-white">
+            <NexoLogo height="h-6" />
           </Link>
           <p className="mt-2 text-sm text-neutral-400">
             Crea tu cuenta y empieza a automatizar

@@ -24,6 +24,7 @@ import {
   Zap,
   ArrowUpRight,
 } from "lucide-react";
+import { NexoLogo, NexoX } from "@/components/Logo";
 
 /* ─── Animation Helper ──────────────────────────────── */
 
@@ -60,13 +61,8 @@ function Navbar() {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-neutral-100 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900">
-            <Bot className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-neutral-900">
-            NexoBot
-          </span>
+        <Link href="/" className="text-xl text-neutral-900">
+          <NexoLogo height="h-5" />
         </Link>
 
         {/* Desktop nav */}
@@ -1018,13 +1014,8 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white">
-                <Bot className="h-5 w-5 text-neutral-900" />
-              </div>
-              <span className="text-lg font-bold tracking-tight text-white">
-                NexoBot
-              </span>
+            <div className="text-xl text-white">
+              <NexoLogo height="h-5" />
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-500">
               Automatiza la atención al cliente de tu negocio con inteligencia
