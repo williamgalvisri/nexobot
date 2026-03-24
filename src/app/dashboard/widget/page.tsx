@@ -1,19 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { Copy, Check, Code, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Copy, Check, Code, ExternalLink, Loader2 } from "lucide-react";
 
 export default function WidgetPage() {
   const [copied, setCopied] = useState(false);
-  const businessId = "tu-business-id";
+  const [businessId, setBusinessId] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchBusiness() {
+      try {
+        const res = await fetch("/api/business/me");
+        if (!res.ok) throw new Error("Error al cargar datos");
+        const data = await res.json();
+        setBusinessId(data.business.id);
+      } catch {
+        setBusinessId("error-cargando-id");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBusiness();
+  }, []);
+
+  const serverUrl = typeof window !== "undefined" ? window.location.origin : "https://tu-dominio.com";
 
   const widgetCode = `<!-- NexoBot Chat Widget -->
 <script
-  src="https://nexobot.com/widget.js"
+  src="${serverUrl}/widget.js"
   data-business-id="${businessId}"
   data-color="#6366f1"
   data-bot-name="Asistente"
-  data-greeting="¡Hola! ¿En qué puedo ayudarte?"
+  data-greeting="Hola! En que puedo ayudarte?"
   async>
 </script>`;
 
@@ -22,6 +41,14 @@ export default function WidgetPage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -40,11 +67,11 @@ export default function WidgetPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm font-bold">
               1
             </div>
-            <h2 className="text-lg font-semibold">Copia el código</h2>
+            <h2 className="text-lg font-semibold">Copia el codigo</h2>
           </div>
 
           <p className="mb-4 text-sm text-gray-400">
-            Copia este código y pégalo antes de la etiqueta{" "}
+            Copia este codigo y pegalo antes de la etiqueta{" "}
             <code className="rounded bg-gray-800 px-1.5 py-0.5 text-brand-400">
               {"</body>"}
             </code>{" "}
@@ -105,7 +132,7 @@ export default function WidgetPage() {
             <div className="rounded-lg border border-white/10 bg-gray-800 p-4">
               <code className="text-brand-400">data-position</code>
               <p className="mt-1 text-gray-400">
-                Posición: &quot;right&quot; o &quot;left&quot;. Default: right
+                Posicion: &quot;right&quot; o &quot;left&quot;. Default: right
               </p>
             </div>
           </div>
@@ -117,11 +144,11 @@ export default function WidgetPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm font-bold">
               3
             </div>
-            <h2 className="text-lg font-semibold">¡Listo!</h2>
+            <h2 className="text-lg font-semibold">Listo!</h2>
           </div>
           <p className="text-sm text-gray-400">
-            Tu chatbot AI ya está funcionando en tu sitio web. Los visitantes
-            verán un botón de chat en la esquina inferior derecha.
+            Tu chatbot AI ya esta funcionando en tu sitio web. Los visitantes
+            veran un boton de chat en la esquina inferior derecha.
           </p>
         </div>
 

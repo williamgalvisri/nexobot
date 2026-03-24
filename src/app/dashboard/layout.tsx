@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   MessageSquare,
@@ -70,9 +71,12 @@ export default function DashboardLayout({
         </nav>
 
         <div className="border-t border-white/5 px-3 py-4">
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition">
+          <button
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition"
+          >
             <LogOut className="h-5 w-5" />
-            Cerrar sesión
+            Cerrar sesion
           </button>
         </div>
       </aside>

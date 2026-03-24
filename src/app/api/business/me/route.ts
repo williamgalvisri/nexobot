@@ -62,6 +62,11 @@ export async function GET() {
       slug: business.slug,
       plan: business.plan,
       botName: business.botName,
+      botGreeting: business.botGreeting,
+      botPersonality: business.botPersonality,
+      botContext: business.botContext,
+      botInstructions: business.botInstructions,
+      language: business.language,
       widgetColor: business.widgetColor,
     },
     stats: {

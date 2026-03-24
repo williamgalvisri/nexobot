@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { Bot, Mail, Lock, User, Building, ArrowRight, Check } from "lucide-react";
 
 export default function RegisterPage() {
@@ -23,8 +24,18 @@ export default function RegisterPage() {
       });
 
       if (res.ok) {
-        // In production: auto-login then redirect
-        window.location.href = "/dashboard";
+        const result = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+        if (result?.ok) {
+          window.location.href = "/dashboard";
+        } else {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
       }
     } catch {
       setLoading(false);

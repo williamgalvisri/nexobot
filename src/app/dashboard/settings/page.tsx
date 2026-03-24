@@ -1,36 +1,116 @@
 "use client";
 
-import { useState } from "react";
-import { Save, Bot, Palette, Globe, MessageSquare } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Save, Bot, Palette, Globe, MessageSquare, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 export default function SettingsPage() {
-  const [botName, setBotName] = useState("Asistente");
-  const [greeting, setGreeting] = useState(
-    "¡Hola! ¿En qué puedo ayudarte hoy?"
-  );
-  const [personality, setPersonality] = useState("profesional y amigable");
-  const [context, setContext] = useState(
-    "Somos una clínica dental con 10 años de experiencia.\n\nServicios:\n- Limpieza dental: $500 MXN\n- Blanqueamiento: $3,000 MXN\n- Ortodoncia: desde $15,000 MXN\n- Consulta general: $500 MXN\n\nHorario: Lunes a Viernes 9:00-18:00, Sábados 9:00-14:00\nDirección: Av. Reforma 123, CDMX\nTeléfono: 55 1234 5678"
-  );
-  const [instructions, setInstructions] = useState(
-    "Si preguntan por emergencias, indicar que llamen al 55 1234 5678.\nSi preguntan por seguros, decir que aceptamos GNP, MetLife y Seguros Monterrey."
-  );
+  const [botName, setBotName] = useState("");
+  const [greeting, setGreeting] = useState("");
+  const [personality, setPersonality] = useState("");
+  const [context, setContext] = useState("");
+  const [instructions, setInstructions] = useState("");
   const [language, setLanguage] = useState("es");
   const [widgetColor, setWidgetColor] = useState("#6366f1");
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/business/me");
+        if (!res.ok) throw new Error("Error al cargar datos");
+        const data = await res.json();
+        const b = data.business;
+        setBotName(b.botName ?? "");
+        setGreeting(b.botGreeting ?? "");
+        setPersonality(b.botPersonality ?? "");
+        setContext(b.botContext ?? "");
+        setInstructions(b.botInstructions ?? "");
+        setLanguage(b.language ?? "es");
+        setWidgetColor(b.widgetColor ?? "#6366f1");
+      } catch {
+        setFeedback({ type: "error", message: "No se pudieron cargar los datos" });
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSettings();
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/business/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          botName,
+          botGreeting: greeting,
+          botPersonality: personality,
+          botContext: context,
+          botInstructions: instructions,
+          language,
+          widgetColor,
+        }),
+      });
+      if (!res.ok) throw new Error("Error al guardar");
+      setFeedback({ type: "success", message: "Cambios guardados correctamente" });
+    } catch {
+      setFeedback({ type: "error", message: "Error al guardar los cambios" });
+    } finally {
+      setSaving(false);
+      setTimeout(() => setFeedback(null), 4000);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Configuración del Bot</h1>
+          <h1 className="text-2xl font-bold">Configuracion del Bot</h1>
           <p className="mt-1 text-sm text-gray-400">
-            Personaliza cómo tu bot interactúa con tus clientes
+            Personaliza como tu bot interactua con tus clientes
           </p>
         </div>
-        <button className="flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-500 transition">
-          <Save className="h-4 w-4" />
-          Guardar cambios
-        </button>
+        <div className="flex items-center gap-3">
+          {feedback && (
+            <span
+              className={`flex items-center gap-1.5 text-sm ${
+                feedback.type === "success" ? "text-green-400" : "text-red-400"
+              }`}
+            >
+              {feedback.type === "success" ? (
+                <CheckCircle className="h-4 w-4" />
+              ) : (
+                <AlertCircle className="h-4 w-4" />
+              )}
+              {feedback.message}
+            </span>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-500 transition disabled:opacity-50"
+          >
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
+            {saving ? "Guardando..." : "Guardar cambios"}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-8">
@@ -88,14 +168,14 @@ export default function SettingsPage() {
             <h2 className="text-lg font-semibold">Contexto del Negocio</h2>
           </div>
           <p className="mb-4 text-sm text-gray-400">
-            Escribe toda la información que tu bot necesita saber: servicios,
-            precios, horarios, políticas, etc.
+            Escribe toda la informacion que tu bot necesita saber: servicios,
+            precios, horarios, politicas, etc.
           </p>
 
           <div className="space-y-4">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-300">
-                Información del negocio (servicios, precios, horarios)
+                Informacion del negocio (servicios, precios, horarios)
               </label>
               <textarea
                 value={context}
@@ -113,7 +193,7 @@ export default function SettingsPage() {
                 value={instructions}
                 onChange={(e) => setInstructions(e.target.value)}
                 rows={4}
-                placeholder="Reglas especiales, excepciones, casos específicos..."
+                placeholder="Reglas especiales, excepciones, casos especificos..."
                 className="w-full rounded-lg border border-white/10 bg-gray-800 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-500 resize-none"
               />
             </div>
@@ -157,9 +237,9 @@ export default function SettingsPage() {
                 onChange={(e) => setLanguage(e.target.value)}
                 className="w-full rounded-lg border border-white/10 bg-gray-800 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-500"
               >
-                <option value="es">Español</option>
+                <option value="es">Espanol</option>
                 <option value="en">English</option>
-                <option value="pt">Português</option>
+                <option value="pt">Portugues</option>
               </select>
             </div>
           </div>
