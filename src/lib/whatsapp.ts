@@ -1,12 +1,16 @@
 interface WhatsAppMessage {
   to: string;
   body: string;
+  phoneNumberId: string;
+  token: string;
 }
 
-export async function sendWhatsAppMessage({ to, body }: WhatsAppMessage) {
-  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
-  const token = process.env.WHATSAPP_TOKEN;
-
+export async function sendWhatsAppMessage({
+  to,
+  body,
+  phoneNumberId,
+  token,
+}: WhatsAppMessage) {
   const response = await fetch(
     `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
     {

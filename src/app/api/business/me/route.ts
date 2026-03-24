@@ -68,6 +68,8 @@ export async function GET() {
       botInstructions: business.botInstructions,
       language: business.language,
       widgetColor: business.widgetColor,
+      whatsappPhoneId: business.whatsappPhoneId,
+      whatsappConnected: !!business.whatsappToken,
     },
     stats: {
       conversationsToday,

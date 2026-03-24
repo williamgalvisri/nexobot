@@ -12,6 +12,8 @@ const settingsSchema = z.object({
   botInstructions: z.string().optional(),
   language: z.string().optional(),
   widgetColor: z.string().optional(),
+  whatsappPhoneId: z.string().optional(),
+  whatsappToken: z.string().optional(),
 });
 
 export async function PUT(req: NextRequest) {
@@ -44,6 +46,8 @@ export async function PUT(req: NextRequest) {
         ...(data.botInstructions !== undefined && { botInstructions: data.botInstructions }),
         ...(data.language !== undefined && { language: data.language }),
         ...(data.widgetColor !== undefined && { widgetColor: data.widgetColor }),
+        ...(data.whatsappPhoneId !== undefined && { whatsappPhoneId: data.whatsappPhoneId || null }),
+        ...(data.whatsappToken !== undefined && data.whatsappToken && { whatsappToken: data.whatsappToken }),
       },
     });
 
@@ -58,6 +62,8 @@ export async function PUT(req: NextRequest) {
         botInstructions: updated.botInstructions,
         language: updated.language,
         widgetColor: updated.widgetColor,
+        whatsappPhoneId: updated.whatsappPhoneId,
+        whatsappConnected: !!updated.whatsappToken,
       },
     });
   } catch (error) {

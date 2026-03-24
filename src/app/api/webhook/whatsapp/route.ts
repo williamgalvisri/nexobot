@@ -27,13 +27,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: "no_message" });
     }
 
-    // Find business by WhatsApp phone number ID
-    const business = await prisma.business.findFirst({
+    // Find business by WhatsApp phone number ID (per-tenant)
+    const business = await prisma.business.findUnique({
       where: { whatsappPhoneId: parsed.phoneNumberId },
     });
 
-    if (!business) {
-      return NextResponse.json({ status: "no_business" });
+    if (!business || !business.whatsappToken) {
+      return NextResponse.json({ status: "not_configured" });
+    }
+
+    // Idempotency: prevent duplicate processing on webhook retries
+    try {
+      await prisma.processedMessage.create({
+        data: { id: parsed.messageId, businessId: business.id },
+      });
+    } catch (error) {
+      if ((error as { code?: string }).code === "P2002") {
+        return NextResponse.json({ status: "duplicate" });
+      }
+      throw error;
     }
 
     // Get or create conversation
@@ -75,22 +87,20 @@ export async function POST(req: NextRequest) {
         content: m.content,
       })),
       { role: "user" as const, content: parsed.message },
-    ].filter((m): m is { role: "user" | "assistant"; content: string } =>
-      m.role === "user" || m.role === "assistant"
+    ].filter(
+      (m): m is { role: "user" | "assistant"; content: string } =>
+        m.role === "user" || m.role === "assistant"
     );
 
     // Generate response
-    const aiResponse = await generateBotResponse(
-      history as Array<{ role: "user" | "assistant"; content: string }>,
-      {
-        businessName: business.name,
-        botName: business.botName,
-        botPersonality: business.botPersonality,
-        botContext: business.botContext,
-        botInstructions: business.botInstructions,
-        language: business.language,
-      }
-    );
+    const aiResponse = await generateBotResponse(history, {
+      businessName: business.name,
+      botName: business.botName,
+      botPersonality: business.botPersonality,
+      botContext: business.botContext,
+      botInstructions: business.botInstructions,
+      language: business.language,
+    });
 
     // Save bot message
     await prisma.message.create({
@@ -101,10 +111,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Send WhatsApp reply
+    // Send WhatsApp reply using per-business credentials
     await sendWhatsAppMessage({
       to: parsed.from,
       body: aiResponse,
+      phoneNumberId: business.whatsappPhoneId!,
+      token: business.whatsappToken,
     });
 
     return NextResponse.json({ status: "ok" });

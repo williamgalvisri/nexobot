@@ -89,9 +89,9 @@ model Business {
   botInstructions String? @db.Text // Custom instructions
 
   // Integrations
-  whatsappPhoneId String?
-  whatsappToken   String?
-  widgetColor     String  @default("#6366f1")
+  whatsappPhoneId String?  @unique
+  whatsappToken   String?  @db.Text
+  widgetColor     String   @default("#0a0a0a")
 
   // Subscription
   stripeCustomerId     String?   @unique
@@ -100,10 +100,11 @@ model Business {
   plan                 Plan      @default(FREE)
   planExpiresAt        DateTime?
 
-  conversations Conversation[]
-  leads         Lead[]
-  quickReplies  QuickReply[]
-  analytics     Analytics[]
+  conversations     Conversation[]
+  leads             Lead[]
+  quickReplies      QuickReply[]
+  analytics         Analytics[]
+  processedMessages ProcessedMessage[]
 
   @@index([userId])
 }
@@ -194,6 +195,18 @@ enum LeadStatus {
   QUALIFIED
   CONVERTED
   LOST
+}
+
+// ─── Processed Messages (WhatsApp idempotency) ──────
+
+model ProcessedMessage {
+  id         String   @id // WhatsApp message ID
+  businessId String
+  createdAt  DateTime @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
 }
 
 // ─── Quick Replies ───────────────────────────────────

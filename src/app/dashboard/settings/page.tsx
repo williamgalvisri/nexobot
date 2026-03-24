@@ -19,6 +19,8 @@ import {
   ChevronDown,
   ChevronUp,
   Briefcase,
+  Phone,
+  Link2,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -32,6 +34,11 @@ export default function SettingsPage() {
   // Business context (generated)
   const [context, setContext] = useState("");
   const [instructions, setInstructions] = useState("");
+
+  // WhatsApp
+  const [whatsappPhoneId, setWhatsappPhoneId] = useState("");
+  const [whatsappToken, setWhatsappToken] = useState("");
+  const [whatsappConnected, setWhatsappConnected] = useState(false);
 
   // Form fields for AI generation
   const [businessName, setBusinessName] = useState("");
@@ -69,6 +76,8 @@ export default function SettingsPage() {
         setLanguage(b.language ?? "es");
         setWidgetColor(b.widgetColor ?? "#0a0a0a");
         setBusinessName(b.name ?? "");
+        setWhatsappPhoneId(b.whatsappPhoneId ?? "");
+        setWhatsappConnected(b.whatsappConnected ?? false);
         // If there's already context, collapse the form
         if (b.botContext) setShowForm(false);
       } catch {
@@ -98,6 +107,8 @@ export default function SettingsPage() {
           botInstructions: instructions,
           language,
           widgetColor,
+          whatsappPhoneId,
+          ...(whatsappToken && { whatsappToken }),
         }),
       });
       if (!res.ok) throw new Error("Error al guardar");
@@ -473,6 +484,90 @@ export default function SettingsPage() {
             placeholder="Ej: Nunca dar descuentos sin autorización. Si preguntan por emergencias, dar el número de teléfono directo."
             className={inputClass + " resize-none"}
           />
+        </section>
+
+        {/* WhatsApp Business */}
+        <section className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Phone className="h-5 w-5 text-neutral-400" />
+              <h2 className="text-lg font-semibold text-white">
+                WhatsApp Business
+              </h2>
+            </div>
+            {whatsappConnected && (
+              <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Conectado
+              </span>
+            )}
+          </div>
+          <p className="mb-6 text-sm text-neutral-500">
+            Conecta tu WhatsApp Business para que el bot responda
+            automáticamente a tus clientes por WhatsApp.
+          </p>
+
+          <div className="space-y-5">
+            <div>
+              <label className={labelClass}>
+                <span className="flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5" />
+                  Phone Number ID
+                </span>
+              </label>
+              <input
+                type="text"
+                value={whatsappPhoneId}
+                onChange={(e) => setWhatsappPhoneId(e.target.value)}
+                placeholder="Ej: 123456789012345"
+                className={inputClass}
+              />
+              <p className="mt-1.5 text-xs text-neutral-500">
+                Encuéntralo en Meta Business Suite → WhatsApp → Configuración de
+                la API
+              </p>
+            </div>
+
+            <div>
+              <label className={labelClass}>
+                <span className="flex items-center gap-1.5">
+                  <Link2 className="h-3.5 w-3.5" />
+                  Token de acceso permanente
+                </span>
+              </label>
+              <input
+                type="password"
+                value={whatsappToken}
+                onChange={(e) => setWhatsappToken(e.target.value)}
+                placeholder={
+                  whatsappConnected
+                    ? "••••••••  (token guardado — deja vacío para mantener)"
+                    : "Pega tu token de acceso aquí"
+                }
+                className={inputClass}
+              />
+              <p className="mt-1.5 text-xs text-neutral-500">
+                Genera un token permanente en Meta Developers → Tu App →
+                WhatsApp → API Setup
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-neutral-700 bg-neutral-800 p-4">
+              <p className="text-xs font-medium text-neutral-300 mb-2">
+                URL del Webhook (configúrala en Meta):
+              </p>
+              <code className="block rounded bg-neutral-900 px-3 py-2 text-xs text-neutral-400 break-all">
+                {typeof window !== "undefined"
+                  ? window.location.origin
+                  : "https://tu-dominio.com"}
+                /api/webhook/whatsapp
+              </code>
+              <p className="mt-2 text-xs text-neutral-500">
+                Verify Token:{" "}
+                <code className="text-neutral-400">nexobot-verify-token</code>
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Appearance */}
