@@ -1,9 +1,15 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
 
-const FROM_EMAIL =
-  process.env.EMAIL_FROM || "NexoBot <onboarding@resend.dev>";
+function getResend() {
+  if (!_resend) {
+    const key = process.env.RESEND_API_KEY;
+    if (!key) return null;
+    _resend = new Resend(key);
+  }
+  return _resend;
+}
 
 export async function sendWelcomeEmail({
   email,
@@ -14,11 +20,19 @@ export async function sendWelcomeEmail({
   name: string;
   businessName: string;
 }) {
+  const resend = getResend();
+  if (!resend) {
+    console.warn("RESEND_API_KEY not set, skipping welcome email");
+    return;
+  }
+
+  const fromEmail =
+    process.env.EMAIL_FROM || "NexoBot <onboarding@resend.dev>";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   try {
     await resend.emails.send({
-      from: FROM_EMAIL,
+      from: fromEmail,
       to: email,
       subject: `Bienvenido a NexoBot, ${name} — tu asistente AI está listo`,
       html: buildWelcomeHtml({ name, businessName, appUrl }),
